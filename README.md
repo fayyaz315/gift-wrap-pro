@@ -1,5 +1,245 @@
 # Shopify App Template - React Router By Fayyaz Ahmed
 
+# Auto Add Gift Wrap in Shopify Cart  
+Using Cart Transform Function & Shopify Functions API
+
+This repository demonstrates how to automatically add a **Gift Wrap service product** to the Shopify cart using the **Cart Transform Function**.  
+When a customer selects “Gift Wrap: Yes”, the cart line is expanded into two separate items:
+
+- The original product  
+- The gift wrap service product with dynamic pricing  
+
+All of this is done using **Shopify Functions**, without any third-party apps.
+
+---
+
+## 🚀 Features
+
+- Native Shopify implementation (no apps required)
+- Uses Shopify Functions API
+- Uses Cart Transform API
+- Dynamic gift wrap pricing using product metafields
+- Works perfectly with Shopify Plus
+- Scalable for warranties, service fees, and add-ons
+- Extremely fast and secure
+
+---
+
+## 🧠 How It Works
+
+1. Customer adds a product to cart  
+2. Customer selects:
+   ```
+   Gift Wrap Added = Yes
+   ```
+3. Cart Transform Function runs  
+4. The function:
+   - Reads gift wrap price from product metafield  
+   - Reads gift wrap variant ID from app metafield  
+   - Expands the cart line into:
+     - Original product  
+     - Gift wrap product  
+
+Final cart:
+```
+Product Name      $50
+Gift Wrap Service  $5
+```
+
+---
+
+## 🧩 Architecture
+
+```
+Theme → Cart Attribute
+         ↓
+Cart Transform Function
+         ↓
+Reads Metafields
+         ↓
+Expands Cart Lines
+         ↓
+Final Cart Output
+```
+
+---
+
+## 🏗 Requirements
+
+### 1. Gift Wrap Product
+Create a service product in Shopify Admin:
+
+| Field | Value |
+|------|------|
+Name | Gift Wrapping Service |
+Price | 0 |
+Inventory | Disabled |
+
+Copy the **Variant ID** of this product.
+
+---
+
+### 2. Product Metafield (Gift Wrap Cost)
+
+Define in `shopify.app.toml`:
+
+```toml
+[[metafields]]
+namespace = "$app:gift-wrap"
+key = "cost"
+type = "json"
+owner = "PRODUCT"
+name = "Gift wrap cost"
+```
+
+On each product, set value like:
+
+```json
+{"amount":"5.0"}
+```
+
+This controls gift wrap price per product.
+
+---
+
+### 3. Function Configuration Metafield
+
+Define:
+
+```toml
+[[metafields]]
+namespace = "$app:optional-add-ons"
+key = "function-configuration"
+type = "single_line_text_field"
+owner = "SHOP"
+name = "Gift wrap variant configuration"
+```
+
+Set its value in Admin:
+
+```
+gid://shopify/ProductVariant/1234567890
+```
+
+(Replace with your Gift Wrap variant ID)
+
+---
+
+### 4. Cart Attribute (Theme / Frontend)
+
+When user selects gift wrap:
+
+```
+Key:   Gift Wrap Added
+Value: Yes
+```
+
+---
+
+## 🧩 Function Logic Summary
+
+| Condition | Description |
+|--------|-----------|
+Is ProductVariant | Ensures valid item |
+Gift Wrap Added = Yes | Customer selected gift wrap |
+Product has metafield | Gift wrap price exists |
+Gift Wrap Variant ID exists | Service product is defined |
+
+If all are true → cart line expands.
+
+---
+
+## 📂 Example Expansion
+
+Before:
+```
+T-Shirt   x1   $50
+```
+
+After:
+```
+T-Shirt         x1   $50
+Gift Wrap       x1    $5
+```
+
+---
+
+## 🔁 Currency Support
+
+Gift wrap price is multiplied by:
+
+```
+presentmentCurrencyRate
+```
+
+So it works automatically with multi-currency stores.
+
+---
+
+## 🧑‍💻 Tech Stack
+
+- JavaScript
+- Shopify Functions
+- Cart Transform API
+- Metafields
+- Shopify CLI
+
+---
+
+## 🏆 Best Use Cases
+
+| Add-On Type | Example |
+|--------|--------|
+Gift Wrap | Packaging fee |
+Warranty | Protection plans |
+Installation | Setup services |
+Priority Handling | Fast processing |
+
+Just replace:
+- Variant ID  
+- Metafield namespace  
+- Pricing logic  
+
+---
+
+## 🔍 SEO Keywords
+
+- Shopify Functions  
+- Cart Transform Function  
+- Cart Transform API  
+- Shopify Gift Wrap  
+- Shopify Gift Wrap Without App  
+- Shopify Plus Cart Customization  
+- Shopify Cart Automation  
+- Shopify Dynamic Pricing  
+
+---
+
+## 📌 Summary
+
+This project shows how to:
+- Use Shopify Functions  
+- Customize cart behavior  
+- Implement dynamic add-ons  
+- Avoid third-party apps  
+- Build professional Shopify features  
+
+---
+
+## 🎯 Final Result
+
+```
+No Apps  
+Shopify Native  
+Dynamic Pricing  
+Cart Transform API  
+Shopify Functions  
+Production Ready
+```
+
+Perfect for modern Shopify and Shopify Plus stores.
+
+
 This is a template for building a [Shopify app](https://shopify.dev/docs/apps/getting-started) using [React Router](https://reactrouter.com/). It was forked from the [Shopify Remix app template](https://github.com/Shopify/shopify-app-template-remix) and converted to React Router.
 
 Rather than cloning this repo, follow the [Quick Start steps](https://github.com/Shopify/shopify-app-template-react-router#quick-start).
