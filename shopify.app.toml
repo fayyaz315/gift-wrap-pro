@@ -1,0 +1,37 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "a11c4f06a07688a61aa55c5d24315f2c"
+name = "GiftWrap Pro"
+application_url = "https://example.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2026-04"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products, write_cart_transforms"
+
+[product.metafields.gift-wrap.cost]
+name = "Gift wrap cost"
+type = "json"
+access.admin = "merchant_read_write"
+
+[product.metafields.gift-wrap.variant-id]
+name = "Gift Wrap Variant"
+type = "variant_reference"
+access.admin = "merchant_read_write"
+
+[auth]
+redirect_urls = [ "https://example.com/api/auth" ]

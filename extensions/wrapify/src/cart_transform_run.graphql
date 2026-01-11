@@ -1,0 +1,36 @@
+query RunInput {
+  presentmentCurrencyRate
+  cart {
+    lines {
+      id
+      quantity
+      cost {
+        amountPerQuantity {
+          amount
+          currencyCode
+        }
+      }
+      giftWrapAdded: attribute(key: "Gift Wrap Added") {
+        value
+      }
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          title
+          product {
+            # Gift wrap cost
+            giftWrapCost: metafield(namespace: "$app:gift-wrap", key: "cost") {
+              type
+              value
+            }
+            # Gift wrap variant ID
+            giftWrapVariant: metafield(namespace: "$app:gift-wrap", key: "variant-id") {
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+}
